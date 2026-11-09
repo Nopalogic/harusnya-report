@@ -42,6 +42,32 @@ export async function courseSeeder(db: DB) {
 	);
 
 	await db.transaction(async (tx) => {
+		await tx.execute(sql`
+			CREATE TABLE IF NOT EXISTS "categories" (
+				"id" serial PRIMARY KEY NOT NULL,
+				"name" text NOT NULL,
+				"created_at" timestamp DEFAULT now()
+			)
+		`);
+		await tx.execute(sql`
+			CREATE TABLE IF NOT EXISTS "courses" (
+				"id" serial PRIMARY KEY NOT NULL,
+				"category_id" integer NOT NULL REFERENCES "categories"("id") ON DELETE cascade,
+				"name" text NOT NULL,
+				"created_at" timestamp DEFAULT now()
+			)
+		`);
+		await tx.execute(sql`
+			CREATE TABLE IF NOT EXISTS "lessons" (
+				"id" serial PRIMARY KEY NOT NULL,
+				"course_id" integer NOT NULL REFERENCES "courses"("id") ON DELETE cascade,
+				"name" text NOT NULL,
+				"number" integer NOT NULL,
+				"objectives" text[] NOT NULL,
+				"created_at" timestamp DEFAULT now()
+			)
+		`);
+
 		await tx.execute(
 			sql`TRUNCATE TABLE ${lessons}, ${courses}, ${categories} RESTART IDENTITY CASCADE`,
 		);
