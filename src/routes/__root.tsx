@@ -12,6 +12,7 @@ import { ThemeProvider } from "#/providers/theme-provider";
 import { GeneralError, NotFoundError } from "#/features/error/";
 
 import appCss from "../styles.css?url";
+import { Toaster } from "#/components/ui/sonner";
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -56,6 +57,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body>
         <ThemeProvider storageKey="theme" defaultTheme="system">
           {children}
+          <Toaster theme="system" richColors position="top-center" />
         </ThemeProvider>
         <TanStackDevtools
           config={{
